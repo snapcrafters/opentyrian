@@ -1,15 +1,59 @@
-name: my-snap-name # you probably want to 'snapcraft register <name>'
-version: '0.1' # just for humans, typically '1.2+git' or '1.3.2'
-summary: Single-line elevator pitch for your amazing snap # 79 char long summary
+name: opentyrian
+version: 'trunk'
+icon: icons/opentyrian.png
+summary: An arcade-style shoot 'em up
 description: |
-  This is my-snap's description. You have a paragraph or two to tell the
-  most important story about your snap. Keep it under 100 words though,
-  we live in tweetspace and your description wants to look good in the snap
-  store.
+  OpenTyrian is a port of the DOS shoot-em-up Tyrian.
 
-confinement: devmode # use 'strict' once you have the right plugs and slots
+  Tyrian is an arcade-style vertical scrolling shooter. The story is set in
+  20,031 where you play as Trent Hawkins, a skilled fighter-pilot employed to
+  fight Microsol and save the galaxy.
+
+grade: stable
+confinement: strict # use 'strict' once you have the right plugs and slots
+
+apps:
+  opentyrian:
+    command: tyrian-launch
+    plugs:
+      - joystick
+      - network
+      - network-bind
+      - opengl
+      - pulseaudio
+      - x11
 
 parts:
-  my-part:
-    # See 'snapcraft plugins'
-    plugin: nil
+  launcher:
+    source: scripts
+    plugin: dump
+    install: |
+      chmod +x tyrian-launch
+    organize:
+      tyrian-launch: bin/tyrian-launch
+
+  icon:
+    source: icons
+    plugin: dump
+    organize:
+      opentyrian.png: usr/local/share/icons/opentyrian.png
+
+  tyrian:
+    source: https://bitbucket.org/opentyrian/opentyrian
+    source-type: hg
+    plugin: make
+    build-packages:
+      - libsdl-net1.2-dev
+      - libsdl1.2-dev
+    stage-packages:
+      - curl
+      - libsdl-net1.2
+      - libsdl1.2debian
+      - unzip
+    prime:
+      - bin/tyrian-launch
+      - usr/bin/curl
+      - usr/bin/unzip
+      - usr/lib
+      - usr/local/bin
+      - usr/local/share/icons/opentyrian.png

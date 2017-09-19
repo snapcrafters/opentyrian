@@ -1,0 +1,14 @@
+#!/bin/bash
+
+if [ ! -f "$SNAP_USER_DATA/tyrian21.zip" ]; then
+	[ -e "$SNAP_USER_DATA/tyrian21.zip" ] && rm -rf "$SNAP_USER_DATA/tyrian21.zip"
+	curl -o "$SNAP_USER_DATA/tyrian21.zip" "https://www.camanis.net/tyrian/tyrian21.zip"
+fi
+
+if [ ! -d "$SNAP_USER_DATA/.tyrian/data" ]; then
+	[ -e "$SNAP_USER_DATA/.tyrian/data" ] && rm -rf "$SNAP_USER_DATA/.tyrian/data"
+	mkdir -p "$SNAP_USER_DATA/.tyrian/data"
+	unzip -j -L -o "$SNAP_USER_DATA/tyrian21.zip" -d "$SNAP_USER_DATA/.tyrian/data"
+fi
+
+exec "$SNAP/usr/local/bin/opentyrian" -t "$SNAP_USER_DATA/.tyrian/data" "$@"
