@@ -2,7 +2,7 @@ name: opentyrian
 version: 'trunk'
 icon: icons/opentyrian.png
 summary: An arcade-style shoot 'em up
-description: |
+description: >
   OpenTyrian is a port of the DOS shoot-em-up Tyrian.
 
   Tyrian is an arcade-style vertical scrolling shooter. The story is set in
@@ -14,14 +14,18 @@ confinement: strict # use 'strict' once you have the right plugs and slots
 
 apps:
   opentyrian:
-    command: tyrian-launch
+    command: desktop-launch tyrian-launch
     plugs:
-      - joystick
-      - network
-      - network-bind
-      - opengl
-      - pulseaudio
-      - x11
+    - desktop
+    - desktop-legacy
+    - joystick
+    - network
+    - network-bind
+    - opengl
+    - pulseaudio
+    - screen-inhibit-control
+    - wayland
+    - x11
 
 parts:
   launcher:
@@ -39,21 +43,36 @@ parts:
       opentyrian.png: usr/local/share/icons/opentyrian.png
 
   tyrian:
+    after: [desktop-glib-only]
     source: https://bitbucket.org/opentyrian/opentyrian
     source-type: hg
     plugin: make
     build-packages:
-      - libsdl-net1.2-dev
-      - libsdl1.2-dev
+    - libsdl-net1.2-dev
+    - libsdl1.2-dev
     stage-packages:
-      - curl
-      - libsdl-net1.2
-      - libsdl1.2debian
-      - unzip
+    - curl
+    - libdrm2
+    - libgl1
+    - libglapi-mesa
+    - libglu1-mesa
+    - libsdl-net1.2
+    - libsdl1.2debian
+    - libx11-xcb1
+    - libxcb-dri2-0
+    - libxcb-dri3-0
+    - libxcb-glx0
+    - libxcb-present0
+    - libxcb-sync1
+    - libxdamage1
+    - libxfixes3
+    - libxshmfence1
+    - libxxf86vm1
+    - unzip
     prime:
-      - bin/tyrian-launch
-      - usr/bin/curl
-      - usr/bin/unzip
-      - usr/lib
-      - usr/local/bin
-      - usr/local/share/icons/opentyrian.png
+    - bin/tyrian-launch
+    - usr/bin/curl
+    - usr/bin/unzip
+    - usr/lib
+    - usr/local/bin
+    - usr/local/share/icons/opentyrian.png
