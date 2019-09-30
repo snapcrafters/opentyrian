@@ -16,6 +16,7 @@ apps:
   opentyrian:
     command: desktop-launch tyrian-launch
     plugs:
+    - audio-playback
     - desktop
     - desktop-legacy
     - joystick
