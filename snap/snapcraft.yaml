@@ -45,8 +45,7 @@ parts:
 
   tyrian:
     after: [desktop-glib-only]
-    source: https://bitbucket.org/opentyrian/opentyrian
-    source-type: hg
+    source: https://github.com/opentyrian/opentyrian.git
     plugin: make
     build-packages:
     - libsdl-net1.2-dev
