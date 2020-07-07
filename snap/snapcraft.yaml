@@ -60,8 +60,8 @@ parts:
       install -m644 -D -t $SNAPCRAFT_PART_INSTALL/usr/local/share/icons linux/icons/tyrian-128.png
     build-packages:
     - gcc
-    - libsdl-net1.2-dev
-    - libsdl1.2-dev
+    - libsdl2-net-dev
+    - libsdl2-dev
     stage-packages:
     - curl
     - freeglut3
@@ -69,8 +69,8 @@ parts:
     - libgl1
     - libglapi-mesa
     - libglu1-mesa
-    - libsdl-net1.2
-    - libsdl1.2debian
+    - libsdl2-net-2.0-0
+    - libsdl2-2.0-0
     - libslang2
     - libx11-xcb1
     - libxcb-dri2-0
