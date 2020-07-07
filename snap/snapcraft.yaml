@@ -1,6 +1,6 @@
 name: opentyrian
 version: 'trunk'
-icon: icons/opentyrian.png
+license: GPL-2.0+
 summary: An arcade-style shoot 'em up
 description: >
   OpenTyrian is a port of the DOS shoot-em-up Tyrian.
@@ -10,11 +10,14 @@ description: >
   fight Microsol and save the galaxy.
 
 grade: stable
-confinement: strict # use 'strict' once you have the right plugs and slots
+confinement: strict
+base: core18
 
 apps:
   opentyrian:
-    command: desktop-launch tyrian-launch
+    command: bin/tyrian-launch
+    command-chain: [bin/desktop-launch]
+    desktop: usr/local/share/applications/opentyrian.desktop
     plugs:
     - audio-playback
     - desktop
@@ -29,36 +32,46 @@ apps:
     - x11
 
 parts:
+  desktop-glib-only:
+    source: https://github.com/ubuntu/snapcraft-desktop-helpers.git
+    source-subdir: glib-only
+    plugin: make
+    build-packages:
+      - libglib2.0-dev
+    stage-packages:
+      - libglib2.0-bin
+
   launcher:
     source: scripts
     plugin: dump
-    install: |
-      chmod +x tyrian-launch
     organize:
       tyrian-launch: bin/tyrian-launch
 
-  icon:
-    source: icons
-    plugin: dump
-    organize:
-      opentyrian.png: usr/local/share/icons/opentyrian.png
-
   tyrian:
     after: [desktop-glib-only]
-    source: https://bitbucket.org/opentyrian/opentyrian
-    source-type: hg
+    source: https://github.com/opentyrian/opentyrian.git
     plugin: make
+    override-pull: |
+      snapcraftctl pull
+      sed -i 's|Icon=.*|Icon=/usr/local/share/icons/tyrian-128.png|' linux/opentyrian.desktop
+    override-build: |
+      snapcraftctl build
+      install -m644 -D -t $SNAPCRAFT_PART_INSTALL/usr/local/share/applications linux/opentyrian.desktop
+      install -m644 -D -t $SNAPCRAFT_PART_INSTALL/usr/local/share/icons linux/icons/tyrian-128.png
     build-packages:
+    - gcc
     - libsdl-net1.2-dev
     - libsdl1.2-dev
     stage-packages:
     - curl
+    - freeglut3
     - libdrm2
     - libgl1
     - libglapi-mesa
     - libglu1-mesa
     - libsdl-net1.2
     - libsdl1.2debian
+    - libslang2
     - libx11-xcb1
     - libxcb-dri2-0
     - libxcb-dri3-0
@@ -71,9 +84,8 @@ parts:
     - libxxf86vm1
     - unzip
     prime:
-    - bin/tyrian-launch
+    - lib
     - usr/bin/curl
     - usr/bin/unzip
-    - usr/lib
-    - usr/local/bin
-    - usr/local/share/icons/opentyrian.png
+    - usr/lib/$SNAPCRAFT_ARCH_TRIPLET
+    - usr/local
