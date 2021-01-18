@@ -12,6 +12,7 @@ description: >
 grade: stable
 confinement: strict
 base: core18
+compression: lzo
 
 apps:
   opentyrian:
