@@ -11,7 +11,7 @@ description: >
 
 grade: stable
 confinement: strict
-base: core18
+base: core22
 compression: lzo
 
 apps:
@@ -53,12 +53,12 @@ parts:
     source: https://github.com/opentyrian/opentyrian.git
     plugin: make
     override-pull: |
-      snapcraftctl pull
+      craftctl default
       sed -i 's|Icon=.*|Icon=/usr/local/share/icons/tyrian-128.png|' linux/opentyrian.desktop
     override-build: |
-      snapcraftctl build
-      install -m644 -D -t $SNAPCRAFT_PART_INSTALL/usr/local/share/applications linux/opentyrian.desktop
-      install -m644 -D -t $SNAPCRAFT_PART_INSTALL/usr/local/share/icons linux/icons/tyrian-128.png
+      craftctl default
+      install -m644 -D -t $CRAFT_PART_INSTALL/usr/local/share/applications linux/opentyrian.desktop
+      install -m644 -D -t $CRAFT_PART_INSTALL/usr/local/share/icons linux/icons/tyrian-128.png
     build-packages:
     - gcc
     - libsdl2-net-dev
@@ -85,8 +85,7 @@ parts:
     - libxxf86vm1
     - unzip
     prime:
-    - lib
     - usr/bin/curl
     - usr/bin/unzip
-    - usr/lib/$SNAPCRAFT_ARCH_TRIPLET
+    - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR
     - usr/local
