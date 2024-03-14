@@ -35,9 +35,11 @@ architectures:
 
 apps:
   opentyrian:
+    extensions: [gnome]
     command: bin/tyrian-launch
-    command-chain: [bin/desktop-launch]
     desktop: usr/local/share/applications/opentyrian.desktop
+    environment:
+      DISABLE_WAYLAND: 1
     plugs:
       - audio-playback
       - desktop
@@ -52,22 +54,12 @@ apps:
       - x11
 
 parts:
-  desktop-glib-only:
-    source: https://github.com/ubuntu/snapcraft-desktop-helpers.git
-    source-subdir: glib-only
-    plugin: make
-    build-packages:
-      - libglib2.0-dev
-    stage-packages:
-      - libglib2.0-bin
-
   launcher:
     plugin: dump
     source: ./snap/local
     source-type: local
 
   tyrian:
-    after: [desktop-glib-only]
     source: https://github.com/opentyrian/opentyrian.git
     plugin: make
     override-pull: |
@@ -86,6 +78,8 @@ parts:
       - freeglut3
       - libdrm2
       - libgl1
+      - libgl1-mesa-dri
+      - libgl1-mesa-glx
       - libglapi-mesa
       - libglu1-mesa
       - libsdl2-2.0-0
@@ -107,3 +101,12 @@ parts:
       - usr/bin/unzip
       - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR
       - usr/local
+
+  cleanup:
+    after: [tyrian]
+    plugin: nil
+    build-snaps: [gnome-42-2204]
+    override-prime: |
+      set -eux
+      cd /snap/gnome-42-2204/current
+      find . -type f,l -exec rm -f $CRAFT_PRIME/{} \;
