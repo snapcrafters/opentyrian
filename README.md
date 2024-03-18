@@ -16,7 +16,7 @@
 ## Install
 
 ```shell
-snap install opentyrian --classic
+snap install opentyrian
 ```
 
 ([Don't have snapd installed?](https://snapcraft.io/docs/core/install))
