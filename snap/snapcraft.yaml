@@ -1,6 +1,5 @@
 name: opentyrian
-version: 'trunk'
-license: GPL-2.0+
+version: 2.1.20221123
 summary: An arcade-style shoot 'em up
 description: >
   OpenTyrian is a port of the DOS shoot-em-up Tyrian.
@@ -9,47 +8,57 @@ description: >
   20,031 where you play as Trent Hawkins, a skilled fighter-pilot employed to
   fight Microsol and save the galaxy.
 
+  **Authors**
+
+  This snap package is maintained by the Snapcrafters community. It is not necessarily endorsed or
+  officially supported by the developers of the application itself.
+
+license: GPL-2.0+
+website: https://github.com/opentyrian/opentyrian
+contact: https://github.com/snapcrafters/opentyrian/issues
+issues: https://github.com/snapcrafters/opentyrian/issues
+source-code: https://github.com/opentyrian/minetest
+icon: snap/gui/tyrian.png
+
 grade: stable
 confinement: strict
 base: core22
 compression: lzo
 
+architectures:
+  - build-on: amd64
+  - build-on: arm64
+  - build-on: armhf
+  - build-on: ppc64el
+  - build-on: s390x
+
 apps:
   opentyrian:
+    extensions: [gnome]
     command: bin/tyrian-launch
-    command-chain: [bin/desktop-launch]
     desktop: usr/local/share/applications/opentyrian.desktop
+    environment:
+      DISABLE_WAYLAND: 1
     plugs:
-    - audio-playback
-    - desktop
-    - desktop-legacy
-    - joystick
-    - network
-    - network-bind
-    - opengl
-    - pulseaudio
-    - screen-inhibit-control
-    - wayland
-    - x11
+      - audio-playback
+      - desktop
+      - desktop-legacy
+      - joystick
+      - network
+      - network-bind
+      - opengl
+      - pulseaudio
+      - screen-inhibit-control
+      - wayland
+      - x11
 
 parts:
-  desktop-glib-only:
-    source: https://github.com/ubuntu/snapcraft-desktop-helpers.git
-    source-subdir: glib-only
-    plugin: make
-    build-packages:
-      - libglib2.0-dev
-    stage-packages:
-      - libglib2.0-bin
-
   launcher:
-    source: scripts
     plugin: dump
-    organize:
-      tyrian-launch: bin/tyrian-launch
+    source: ./snap/local
+    source-type: local
 
   tyrian:
-    after: [desktop-glib-only]
     source: https://github.com/opentyrian/opentyrian.git
     plugin: make
     override-pull: |
@@ -60,32 +69,43 @@ parts:
       install -m644 -D -t $CRAFT_PART_INSTALL/usr/local/share/applications linux/opentyrian.desktop
       install -m644 -D -t $CRAFT_PART_INSTALL/usr/local/share/icons linux/icons/tyrian-128.png
     build-packages:
-    - gcc
-    - libsdl2-net-dev
-    - libsdl2-dev
+      - gcc
+      - libsdl2-dev
+      - libsdl2-net-dev
     stage-packages:
-    - curl
-    - freeglut3
-    - libdrm2
-    - libgl1
-    - libglapi-mesa
-    - libglu1-mesa
-    - libsdl2-net-2.0-0
-    - libsdl2-2.0-0
-    - libslang2
-    - libx11-xcb1
-    - libxcb-dri2-0
-    - libxcb-dri3-0
-    - libxcb-glx0
-    - libxcb-present0
-    - libxcb-sync1
-    - libxdamage1
-    - libxfixes3
-    - libxshmfence1
-    - libxxf86vm1
-    - unzip
+      - curl
+      - freeglut3
+      - libdrm2
+      - libgl1
+      - libgl1-mesa-dri
+      - libgl1-mesa-glx
+      - libglapi-mesa
+      - libglu1-mesa
+      - libsdl2-2.0-0
+      - libsdl2-net-2.0-0
+      - libslang2
+      - libx11-xcb1
+      - libxcb-dri2-0
+      - libxcb-dri3-0
+      - libxcb-glx0
+      - libxcb-present0
+      - libxcb-sync1
+      - libxdamage1
+      - libxfixes3
+      - libxshmfence1
+      - libxxf86vm1
+      - unzip
     prime:
-    - usr/bin/curl
-    - usr/bin/unzip
-    - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR
-    - usr/local
+      - usr/bin/curl
+      - usr/bin/unzip
+      - usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR
+      - usr/local
+
+  cleanup:
+    after: [tyrian]
+    plugin: nil
+    build-snaps: [gnome-42-2204]
+    override-prime: |
+      set -eux
+      cd /snap/gnome-42-2204/current
+      find . -type f,l -exec rm -f $CRAFT_PRIME/{} \;
