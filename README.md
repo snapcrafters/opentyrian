@@ -8,7 +8,7 @@
 
 <p align="center">
 <a href="https://snapcraft.io/opentyrian"><img src="https://snapcraft.io/opentyrian/badge.svg" alt="Snap Status"></a>
-<a href="https://github.com/snapcrafters/opentyrian/actions/workflows/sync-upstream.yml"><img src="https://github.com/snapcrafters/opentyrian/actions/workflows/sync-upstream.yml/badge.svg"></a>
+<a href="https://github.com/snapcrafters/opentyrian/actions/workflows/sync-version-with-upstream.yml"><img src="https://github.com/snapcrafters/opentyrian/actions/workflows/sync-version-with-upstream.yml/badge.svg"></a>
 <a href="https://github.com/snapcrafters/opentyrian/actions/workflows/release-to-candidate.yml"><img src="https://github.com/snapcrafters/opentyrian/actions/workflows/release-to-candidate.yml/badge.svg"></a>
 <a href="https://github.com/snapcrafters/opentyrian/actions/workflows/promote-to-stable.yml"><img src="https://github.com/snapcrafters/opentyrian/actions/workflows/promote-to-stable.yml/badge.svg"></a>
 </p>
