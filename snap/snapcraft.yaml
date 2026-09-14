@@ -1,5 +1,5 @@
 name: opentyrian
-version: 2.1.20260912
+version: 2.1.20260913
 summary: An arcade-style shoot 'em up
 description: >
   OpenTyrian is a port of the DOS shoot-em-up Tyrian.
@@ -58,6 +58,7 @@ parts:
 
   tyrian:
     source: https://github.com/opentyrian/opentyrian.git
+    source-tag: v$SNAPCRAFT_PROJECT_VERSION
     plugin: make
     override-pull: |
       craftctl default
